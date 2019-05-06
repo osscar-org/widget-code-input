@@ -1,2 +1,7 @@
-appmode
 ipywidgets
+
+# The next dependencies are needed only for the demos,
+# not for the widget itself
+appmode
+numpy
+matplotlib
