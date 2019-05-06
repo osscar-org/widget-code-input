@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 import ipywidgets as widgets
-from traitlets import Unicode
+from traitlets import Unicode, validate, TraitError
 
 @widgets.register
 class WidgetCodeInput(widgets.DOMWidget):
@@ -12,41 +12,74 @@ class WidgetCodeInput(widgets.DOMWidget):
     _view_module_version = Unicode('^0.1.0').tag(sync=True)
     _model_module_version = Unicode('^0.1.0').tag(sync=True)
     function_name = Unicode('example').tag(sync=True)
-    function_parameters = Unicode('').tag(sync=True) # TODO: validate these (these could allow for code injection)
+    function_parameters = Unicode('').tag(sync=True)
     docstring = Unicode('\n').tag(sync=True)
     function_body = Unicode('').tag(sync=True)
+
+    @validate('function_name')
+    def _valid_function_name(self, function_name):
+        """
+        Validate that the function name is a valid python variable name
+        """
+        from .utils import is_valid_variable_name
+        if not is_valid_variable_name(function_name['value']):
+            raise TraitError("Invalid variable name '{}'".format(function_name['value']))
+        return function_name['value']
+
+    @validate('function_parameters')
+    def _valid_function_parameters(self, function_parameters):
+        """
+        Validate that the function parameters do not contain newlines
+
+        These might allow string injection, and would be difficult to indent
+        properly.
+        """
+        if '\n' in function_parameters['value']:
+            raise TraitError("The function parameters cannot contain newlines")
+        return function_parameters['value']
+
+    @validate('docstring')
+    def _valid_docstring(self, docstring):
+        """
+        Validate that the docstring do not contain triple double quotes
+        """
+        if '"""' in docstring['value']:
+            raise TraitError('The docstring cannot contain triple double quotes (""")')
+        return docstring['value']
 
     def __init__(self, function_name, function_parameters='', docstring='\n', function_body=''):
         """
         Creates a new widget to show a box to enter code.
 
-        :param function_signature: the full function signature, for instance
-           ``def test(a, b=1)``.
-        :param docstring: the docstring of the function.
+        :param function_name: the name of the function
+        :param function_parameters: the parameters of the function (whatever
+            would be within brackets in the function signature line).
+            It MUST be on a single line.
+        :param docstring: the docstring of the function. It cannot contain 
+            triple double quotes (").
         :param function_body: the content of the function body.
-        """
-        from .utils import is_valid_variable_name
-
+        """        
         super(WidgetCodeInput, self).__init__()
-
-        if not is_valid_variable_name(function_name):
-            raise SyntaxError("Invalid variable name '{}'".format(self.function_name))
-
         self.function_name = function_name
         self.function_parameters = function_parameters
         self.docstring = docstring
         self.function_body = function_body
     
-    # TODO: make this property observable
     @property
     def full_function_code(self):
+        """
+        The full code of this function (with a default indentation of 4 spaces)
+        including signature, docstring and body
+        """
         from .utils import build_function
 
         return build_function(self.function_signature, self.docstring, self.function_body)
 
-    # TODO: make this property observable
     @property
     def function_signature(self):
+        """
+        The function signature (first line of the function, containing 'def')
+        """
         from .utils import build_signature
 
         return build_signature(self.function_name, self.function_parameters)
@@ -76,5 +109,5 @@ class WidgetCodeInput(widgets.DOMWidget):
             raise SyntaxError("Invalid function name '{}'".format(self.function_name))
 
         # Optionally one could do a ast.parse here already, to check syntax before execution    
-        exec(compile(self.function_code, __name__, 'exec', dont_inherit=True), globals_dict) 
+        exec(compile(self.full_function_code, __name__, 'exec', dont_inherit=True), globals_dict) 
         return globals_dict[self.function_name]
