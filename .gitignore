@@ -12,3 +12,5 @@ widget_code_input/static/
 .DS_Store
 
 *~
+
+.*.ipynb
