@@ -5,3 +5,5 @@ ipywidgets
 appmode
 numpy
 matplotlib
+tabulate
+
