@@ -1,0 +1,2 @@
+recursive-include widget_code_input/static *.*
+include widget-code-input.json
