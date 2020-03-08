@@ -49,7 +49,8 @@
     "watch:nbextension": "webpack --watch"
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^1.1.10 || ^2"
+    "@jupyter-widgets/base": "^1.1.10 || ^2",
+    "codemirror": "~5.49.2"
   },
   "devDependencies": {
     "@phosphor/application": "^1.6.0",
@@ -77,7 +78,9 @@
     "ts-loader": "^5.2.1",
     "typescript": "~3.1.2",
     "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.1.2",
+    "underscore": "^1.9.1",
+    "@types/codemirror": "^0.0.76"
   },
   "jupyterlab": {
     "extension": "lib/plugin"
