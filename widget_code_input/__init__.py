@@ -1,11 +1,10 @@
-from ._version import version_info, __version__
+#!/usr/bin/env python
+# coding: utf-8
 
-from .widget_code_input import *
+# Copyright (c) Giovanni Pizzi and Dou Du.
+# Distributed under the terms of the Modified BSD License.
 
-def _jupyter_nbextension_paths():
-    return [{
-        'section': 'notebook',
-        'src': 'static',
-        'dest': 'widget-code-input',
-        'require': 'widget-code-input/extension'
-    }]
+from .example import ExampleWidget
+from ._version import __version__, version_info
+
+from .nbextension import _jupyter_nbextension_paths
