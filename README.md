@@ -27,6 +27,12 @@ the nbextension:
 ```bash
 jupyter nbextension enable --py [--sys-prefix|--user|--system] widget_code_input
 ```
+There are seven different code themes can be chosen. They are "eclipse",
+"idea", "material", "midnight", "monokai", "nord" and "solarized".
+You can check the appearance of the code themes at:
+
+[https://codemirror.net/demo/theme.html](https://codemirror.net/demo/theme.html)
+
 
 # Acknowlegements
 

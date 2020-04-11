@@ -26,6 +26,7 @@ import '../css/eclipse.css';
 import '../css/material.css';
 import '../css/solarized.css';
 import '../css/idea.css';
+import '../css/nord.css'; 
 
 import 'codemirror/mode/python/python.js';
 
@@ -44,7 +45,7 @@ class WidgetCodeModel extends DOMWidgetModel {
   }
 
     initialize(){
-        DOMWidgetModel.prototype.initialize.apply(this, arguments);
+        DOMWidgetModel.prototype.initialize.apply(this, arguments as any);
         this.attributes['function_body_id'] = _.uniqueId('function_body');
 
     }
