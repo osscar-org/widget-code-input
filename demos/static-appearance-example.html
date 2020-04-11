@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Test CodeMirror Python fixed API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/codemirror.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.44.0/mode/python/python.min.js"></script>
+
+    <style>
+        .forced-indent {width: 4em;}
+        .CodeMirror {border: 1px solid #aaa; height: auto;}
+        .CodeMirror.header-box {border-bottom: 0px; background-color: #f7f7f7;}
+        .CodeMirror.docstring-box {border-top: 0px; background-color: #f7f7f7;}
+        .CodeMirror.content-box {border-top: 0px;}
+    </style>
+
+</head>
+<body>
+    <div class="main" style="max-width: 800px; margin: auto;">
+        <textarea id="header">
+def my_test_function(a, b):</textarea>
+    <textarea id="docstring">
+'''A test function to return the sum of two numbers
+
+This is a test function to show the functionality and layout.
+You can implement the function that returns of the two input
+values ``a`` and ``b``.
+
+:param a: value for ``a``
+:param b: value for ``b``
+:return: ``a+b``
+'''</textarea>
+    <textarea id="content" rows=10></textarea>
+    </div>
+
+    <script>
+        var myHeader = CodeMirror.fromTextArea(document.getElementById('header'), {
+            lineNumbers: true,
+            firstLineNumber: 1,
+            mode: {name: "python",
+               version: 3,
+               singleLineStringErrors: true,
+               matchBrackets: true},
+            readOnly: true,
+            indentUnit: 4,
+            indentWithTabs: false,
+            //theme: "header"
+        });
+        myHeader.display.wrapper.classList.add("header-box");
+        var myDocstring = CodeMirror.fromTextArea(document.getElementById('docstring'), {
+            lineNumbers: true,
+            firstLineNumber: myHeader.getValue().split('\n').length  + 1,
+            mode: {name: "python",
+               version: 3,
+               singleLineStringErrors: true,
+               matchBrackets: true},
+            readOnly: true,
+            indentUnit: 4,
+            indentWithTabs: false,
+            gutters: ["CodeMirror-linenumbers", "forced-indent"],
+            //theme: "docstring"
+        });
+        myDocstring.display.wrapper.classList.add("docstring-box");
+        var myContent = CodeMirror.fromTextArea(document.getElementById('content'), {
+            lineNumbers: true,
+            firstLineNumber: myHeader.getValue().split('\n').length + myDocstring.getValue().split('\n').length + 1,
+            mode: {name: "python",
+               version: 3,
+               singleLineStringErrors: true,
+               matchBrackets: true},
+            readOnly: false,
+            indentUnit: 4,
+            indentWithTabs: false,
+            gutters: ["CodeMirror-linenumbers", "forced-indent"],
+            // theme: "content"
+        });      
+        myContent.display.wrapper.classList.add("content-box");
+    </script>
+</body>
+</html>
