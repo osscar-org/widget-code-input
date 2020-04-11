@@ -57,7 +57,7 @@ class WidgetCodeInput(DOMWidget):
             raise TraitError('The docstring cannot contain triple double quotes (""")')
         return docstring['value']
 
-    def __init__(self, function_name, function_parameters='', docstring='\n', function_body='', code_theme='midnight'):
+    def __init__(self, function_name, function_parameters='', docstring='\n', function_body='', code_theme=''):
         """
         Creates a new widget to show a box to enter code.
 
@@ -68,6 +68,7 @@ class WidgetCodeInput(DOMWidget):
         :param docstring: the docstring of the function. It cannot contain 
             triple double quotes (").
         :param function_body: the content of the function body.
+        :param code_theme: the code theme of the code input box. 
         """        
         super(WidgetCodeInput, self).__init__()
         self.function_name = function_name
