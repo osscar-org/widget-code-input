@@ -1,4 +1,5 @@
 ipywidgets==7.5.0
 appmode==0.6.0
 IPython==7.8.0
-widget-code-input 
+widget-code-input==1.0.0
+matplotlib==3.3.1
