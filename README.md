@@ -3,7 +3,7 @@
 
 A widget to allow input of a python function, with syntax highlighting.
 
-## Try it with JupyterLab !
+## Try it with Binder !
 
 * Simple usage of the widget code input
 
