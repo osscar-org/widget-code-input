@@ -11,7 +11,9 @@ A widget to allow input of a python function, with syntax highlighting.
 
 * Impact distance of a projectile ( a exmaple for using the widget-code-input for a educational notebook )
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/osscar-org/widget-code-input/develop?urlpath=%2Fvoila%2Frender%2Fdemos%2Fprojectile-notebook.ipynb)
+- Text for the exercise: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/osscar-org/widget-code-input/develop?urlpath=%2Fvoila%2Frender%2Fdemos%2Fprojectile-notebook.ipynb)
+
+- The interactive exercise: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/osscar-org/widget-code-input/develop?urlpath=%2Fvoila%2Frender%2Fdemos%2Fprojectile-inline.ipynb)
 
 ## Installation
 
