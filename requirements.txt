@@ -5,3 +5,4 @@ voila==0.2.2
 voila-osscar-template==0.0.6
 matplotlib==3.3.2
 tabulate==0.8.7
+appmode==0.8.0
