@@ -7,7 +7,7 @@ A widget to allow input of a python function, with syntax highlighting.
 
 * Simple usage of the widget code input
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/osscar-org/widget-code-input/master?urlpath=%2Flab%2Ftree%2Fexamples%2Fintroduction.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/osscar-org/widget-code-input/master?urlpath=%2Ftree%2Fexamples%2Fintroduction.ipynb)
 
 * Impact distance of a projectile ( a exmaple for using the widget-code-input for a educational notebook )
 
