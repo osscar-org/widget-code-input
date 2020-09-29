@@ -4,3 +4,4 @@ jupyter labextension install jupyter-matplotlib
 jupyter nbextension enable --py widgetsnbextension
 jupyter nbextension     enable --py --sys-prefix appmode
 jupyter serverextension enable --py --sys-prefix appmode
+jupyter lab build
