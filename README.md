@@ -42,7 +42,7 @@ You can check the appearance of the code themes at:
 [https://codemirror.net/demo/theme.html](https://codemirror.net/demo/theme.html)
 
 
-# Acknowlegements
+# Acknowledgements
 
 We acknowledge support from:
 * EPFL Open Science Fund
