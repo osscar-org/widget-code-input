@@ -42,9 +42,8 @@ You can check the appearance of the code themes at:
 [https://codemirror.net/demo/theme.html](https://codemirror.net/demo/theme.html)
 
 
-# Acknowlegements
+# Acknowledgements
 
-We acknowledge support from:
-* EPFL Open Science Fund
+We acknowledge support from the EPFL Open Science Fund via the [OSSCAR](http://www.osscar.org) project.
 
-<img src='./OSSCAR-logo.png' width='300'>
+<img src='http://www.osscar.org/wp-content/uploads/2019/03/OSSCAR-logo.png' width='230'>
