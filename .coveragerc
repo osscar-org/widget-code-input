@@ -1,0 +1,2 @@
+[run]
+omit = widget_code_input/tests/*
