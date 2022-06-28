@@ -10,6 +10,7 @@ import ipywidgets as widgets
 from ipywidgets import DOMWidget
 from traitlets import Unicode, validate, TraitError
 from ._frontend import module_name, module_version
+from .utils import is_valid_variable_name, build_function, build_signature
 
 
 @widgets.register
@@ -33,8 +34,6 @@ class WidgetCodeInput(DOMWidget):
         """
         Validate that the function name is a valid python variable name
         """
-        from .utils import is_valid_variable_name
-
         if not is_valid_variable_name(function_name["value"]):
             raise TraitError(
                 "Invalid variable name '{}'".format(function_name["value"])
@@ -62,7 +61,7 @@ class WidgetCodeInput(DOMWidget):
             raise TraitError('The docstring cannot contain triple double quotes (""")')
         return docstring["value"]
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         function_name,
         function_parameters="",
@@ -95,8 +94,6 @@ class WidgetCodeInput(DOMWidget):
         The full code of this function (with a default indentation of 4 spaces)
         including signature, docstring and body
         """
-        from .utils import build_function
-
         return build_function(
             self.function_signature, self.docstring, self.function_body
         )
@@ -106,8 +103,6 @@ class WidgetCodeInput(DOMWidget):
         """
         The function signature (first line of the function, containing 'def')
         """
-        from .utils import build_signature
-
         return build_signature(self.function_name, self.function_parameters)
 
     def get_function_object(self):
@@ -122,8 +117,6 @@ class WidgetCodeInput(DOMWidget):
         :raise SyntaxError: if the function code has syntax errors (or if
           the function name is not a valid identifier)
         """
-        from .utils import is_valid_variable_name
-
         globals_dict = {
             "__builtins__": globals()["__builtins__"],
             "__name__": "__main__",

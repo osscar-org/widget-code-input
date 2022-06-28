@@ -15,6 +15,5 @@ version_npm = data["version"]
 
 if version_py != version_npm or module_version != version_npm:
     raise ValueError("The version number are NOT equal")
-else:
-    print(version_py)
-    print("Check fine for the version number")
+print(version_py)
+print("Check fine for the version number")

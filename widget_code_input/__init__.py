@@ -4,6 +4,7 @@
 # Copyright (c) Giovanni Pizzi and Dou Du.
 # Distributed under the terms of the Modified BSD License.
 
+# pylint: disable=all
 from .widget_code_input import *
 from ._version import __version__, version_info
 
