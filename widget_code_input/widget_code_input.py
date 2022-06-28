@@ -6,37 +6,42 @@
 
 
 from __future__ import absolute_import
-import ipywidgets as widgets 
-from ipywidgets import DOMWidget 
+import ipywidgets as widgets
+from ipywidgets import DOMWidget
 from traitlets import Unicode, validate, TraitError
-from ._frontend import module_name, module_version 
+from ._frontend import module_name, module_version
+
 
 @widgets.register
 class WidgetCodeInput(DOMWidget):
     """A widget to input code in a text box, validate it and run in in a sandboxed environment."""
-    _model_name = Unicode('WidgetCodeModel').tag(sync=True)
+
+    _model_name = Unicode("WidgetCodeModel").tag(sync=True)
     _model_module = Unicode(module_name).tag(sync=True)
     _model_module_version = Unicode(module_version).tag(sync=True)
-    _view_name = Unicode('WidgetCodeView').tag(sync=True)
+    _view_name = Unicode("WidgetCodeView").tag(sync=True)
     _view_module = Unicode(module_name).tag(sync=True)
     _view_module_version = Unicode(module_version).tag(sync=True)
-    function_name = Unicode('example').tag(sync=True)
-    function_parameters = Unicode('').tag(sync=True)
-    docstring = Unicode('\n').tag(sync=True)
-    function_body = Unicode('').tag(sync=True)
-    code_theme = Unicode('').tag(sync=True)  
+    function_name = Unicode("example").tag(sync=True)
+    function_parameters = Unicode("").tag(sync=True)
+    docstring = Unicode("\n").tag(sync=True)
+    function_body = Unicode("").tag(sync=True)
+    code_theme = Unicode("").tag(sync=True)
 
-    @validate('function_name')
+    @validate("function_name")
     def _valid_function_name(self, function_name):
         """
         Validate that the function name is a valid python variable name
         """
         from .utils import is_valid_variable_name
-        if not is_valid_variable_name(function_name['value']):
-            raise TraitError("Invalid variable name '{}'".format(function_name['value']))
-        return function_name['value']
 
-    @validate('function_parameters')
+        if not is_valid_variable_name(function_name["value"]):
+            raise TraitError(
+                "Invalid variable name '{}'".format(function_name["value"])
+            )
+        return function_name["value"]
+
+    @validate("function_parameters")
     def _valid_function_parameters(self, function_parameters):
         """
         Validate that the function parameters do not contain newlines
@@ -44,20 +49,27 @@ class WidgetCodeInput(DOMWidget):
         These might allow string injection, and would be difficult to indent
         properly.
         """
-        if '\n' in function_parameters['value']:
+        if "\n" in function_parameters["value"]:
             raise TraitError("The function parameters cannot contain newlines")
-        return function_parameters['value']
+        return function_parameters["value"]
 
-    @validate('docstring')
+    @validate("docstring")
     def _valid_docstring(self, docstring):
         """
         Validate that the docstring do not contain triple double quotes
         """
-        if '"""' in docstring['value']:
+        if '"""' in docstring["value"]:
             raise TraitError('The docstring cannot contain triple double quotes (""")')
-        return docstring['value']
+        return docstring["value"]
 
-    def __init__(self, function_name, function_parameters='', docstring='\n', function_body='', code_theme='nord'):
+    def __init__(
+        self,
+        function_name,
+        function_parameters="",
+        docstring="\n",
+        function_body="",
+        code_theme="nord",
+    ):
         """
         Creates a new widget to show a box to enter code.
 
@@ -65,18 +77,18 @@ class WidgetCodeInput(DOMWidget):
         :param function_parameters: the parameters of the function (whatever
             would be within brackets in the function signature line).
             It MUST be on a single line.
-        :param docstring: the docstring of the function. It cannot contain 
+        :param docstring: the docstring of the function. It cannot contain
             triple double quotes (").
         :param function_body: the content of the function body.
-        :param code_theme: the code theme of the code input box. 
-        """        
+        :param code_theme: the code theme of the code input box.
+        """
         super(WidgetCodeInput, self).__init__()
         self.function_name = function_name
         self.function_parameters = function_parameters
         self.docstring = docstring
         self.function_body = function_body
-        self.code_theme = code_theme 
-    
+        self.code_theme = code_theme
+
     @property
     def full_function_code(self):
         """
@@ -85,7 +97,9 @@ class WidgetCodeInput(DOMWidget):
         """
         from .utils import build_function
 
-        return build_function(self.function_signature, self.docstring, self.function_body)
+        return build_function(
+            self.function_signature, self.docstring, self.function_body
+        )
 
     @property
     def function_signature(self):
@@ -111,16 +125,18 @@ class WidgetCodeInput(DOMWidget):
         from .utils import is_valid_variable_name
 
         globals_dict = {
-            '__builtins__': globals()['__builtins__'],
-            '__name__': '__main__',
-            '__doc__': None,
-            '__package__': None
+            "__builtins__": globals()["__builtins__"],
+            "__name__": "__main__",
+            "__doc__": None,
+            "__package__": None,
         }
-        
+
         if not is_valid_variable_name(self.function_name):
             raise SyntaxError("Invalid function name '{}'".format(self.function_name))
 
-        # Optionally one could do a ast.parse here already, to check syntax before execution    
-        exec(compile(self.full_function_code, __name__, 'exec', dont_inherit=True), globals_dict) 
+        # Optionally one could do a ast.parse here already, to check syntax before execution
+        exec(
+            compile(self.full_function_code, __name__, "exec", dont_inherit=True),
+            globals_dict,
+        )
         return globals_dict[self.function_name]
-
