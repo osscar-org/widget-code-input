@@ -6,11 +6,19 @@
 
 
 from __future__ import absolute_import
+from functools import wraps
 import ipywidgets as widgets
 from ipywidgets import DOMWidget
 from traitlets import Unicode, validate, TraitError
 from ._frontend import module_name, module_version
-from .utils import is_valid_variable_name, build_function, build_signature
+from .utils import (
+    CodeValidationError,
+    build_function,
+    build_signature,
+    is_valid_variable_name,
+    format_syntax_error_msg,
+    format_generic_error_msg,
+)
 
 
 @widgets.register
@@ -128,8 +136,29 @@ class WidgetCodeInput(DOMWidget):
             raise SyntaxError("Invalid function name '{}'".format(self.function_name))
 
         # Optionally one could do a ast.parse here already, to check syntax before execution
-        exec(
-            compile(self.full_function_code, __name__, "exec", dont_inherit=True),
-            globals_dict,
-        )
-        return globals_dict[self.function_name]
+        try:
+            exec(
+                compile(self.full_function_code, __name__, "exec", dont_inherit=True),
+                globals_dict,
+            )
+        except SyntaxError as exc:
+            raise CodeValidationError(
+                format_syntax_error_msg(exc), orig_exc=exc
+            ) from exc
+
+        function_object = globals_dict[self.function_name]
+
+        def catch_exceptions(func):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                """Wrap and check exceptions to return a longer and clearer exception."""
+
+                try:
+                    return func(*args, **kwargs)
+                except Exception as exc:
+                    err_msg = format_generic_error_msg(exc, code_widget=self)
+                    raise CodeValidationError(err_msg, orig_exc=exc) from exc
+
+            return wrapper
+
+        return catch_exceptions(function_object)
