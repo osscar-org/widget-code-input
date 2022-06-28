@@ -7,6 +7,25 @@ on:
     branches: '*'
 
 jobs:
+  precommit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+
+      - name: Install python dependencies
+        run: |
+          pip install -r requirements.txt        
+          pip freeze
+
+      - name: Run pre-commit
+        run:
+          pre-commit run --all-files || ( git status --short ; git diff ; exit 1 )
   build:
     runs-on: ubuntu-latest
     steps:
