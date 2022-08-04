@@ -6,14 +6,25 @@
 
 
 from __future__ import absolute_import
+from functools import wraps
 import ipywidgets as widgets 
 from ipywidgets import DOMWidget 
 from traitlets import Unicode, validate, TraitError
 from ._frontend import module_name, module_version 
+from .utils import (
+    CodeValidationError,
+    build_function,
+    build_signature,
+    is_valid_variable_name,
+    format_syntax_error_msg,
+    format_generic_error_msg,
+)
+
 
 @widgets.register
 class WidgetCodeInput(DOMWidget):
     """A widget to input code in a text box, validate it and run in in a sandboxed environment."""
+
     _model_name = Unicode('WidgetCodeModel').tag(sync=True)
     _model_module = Unicode(module_name).tag(sync=True)
     _model_module_version = Unicode(module_version).tag(sync=True)
@@ -31,10 +42,11 @@ class WidgetCodeInput(DOMWidget):
         """
         Validate that the function name is a valid python variable name
         """
-        from .utils import is_valid_variable_name
-        if not is_valid_variable_name(function_name['value']):
-            raise TraitError("Invalid variable name '{}'".format(function_name['value']))
-        return function_name['value']
+        if not is_valid_variable_name(function_name["value"]):
+            raise TraitError(
+                "Invalid variable name '{}'".format(function_name["value"])
+            )
+        return function_name["value"]
 
     @validate('function_parameters')
     def _valid_function_parameters(self, function_parameters):
@@ -57,7 +69,14 @@ class WidgetCodeInput(DOMWidget):
             raise TraitError('The docstring cannot contain triple double quotes (""")')
         return docstring['value']
 
-    def __init__(self, function_name, function_parameters='', docstring='\n', function_body='', code_theme='nord'):
+    def __init__(  # pylint: disable=too-many-arguments
+        self,
+        function_name,
+        function_parameters="",
+        docstring="\n",
+        function_body="",
+        code_theme="nord",
+    ):
         """
         Creates a new widget to show a box to enter code.
 
@@ -65,17 +84,17 @@ class WidgetCodeInput(DOMWidget):
         :param function_parameters: the parameters of the function (whatever
             would be within brackets in the function signature line).
             It MUST be on a single line.
-        :param docstring: the docstring of the function. It cannot contain 
+        :param docstring: the docstring of the function. It cannot contain
             triple double quotes (").
         :param function_body: the content of the function body.
-        :param code_theme: the code theme of the code input box. 
-        """        
+        :param code_theme: the code theme of the code input box.
+        """
         super(WidgetCodeInput, self).__init__()
         self.function_name = function_name
         self.function_parameters = function_parameters
         self.docstring = docstring
         self.function_body = function_body
-        self.code_theme = code_theme 
+        self.code_theme = code_theme
     
     @property
     def full_function_code(self):
@@ -83,17 +102,15 @@ class WidgetCodeInput(DOMWidget):
         The full code of this function (with a default indentation of 4 spaces)
         including signature, docstring and body
         """
-        from .utils import build_function
-
-        return build_function(self.function_signature, self.docstring, self.function_body)
+        return build_function(
+            self.function_signature, self.docstring, self.function_body
+        )
 
     @property
     def function_signature(self):
         """
         The function signature (first line of the function, containing 'def')
         """
-        from .utils import build_signature
-
         return build_signature(self.function_name, self.function_parameters)
 
     def get_function_object(self):
@@ -108,19 +125,40 @@ class WidgetCodeInput(DOMWidget):
         :raise SyntaxError: if the function code has syntax errors (or if
           the function name is not a valid identifier)
         """
-        from .utils import is_valid_variable_name
-
         globals_dict = {
-            '__builtins__': globals()['__builtins__'],
-            '__name__': '__main__',
-            '__doc__': None,
-            '__package__': None
+            "__builtins__": globals()["__builtins__"],
+            "__name__": "__main__",
+            "__doc__": None,
+            "__package__": None,
         }
-        
+
         if not is_valid_variable_name(self.function_name):
             raise SyntaxError("Invalid function name '{}'".format(self.function_name))
 
-        # Optionally one could do a ast.parse here already, to check syntax before execution    
-        exec(compile(self.full_function_code, __name__, 'exec', dont_inherit=True), globals_dict) 
-        return globals_dict[self.function_name]
+        # Optionally one could do a ast.parse here already, to check syntax before execution
+        try:
+            exec(
+                compile(self.full_function_code, __name__, "exec", dont_inherit=True),
+                globals_dict,
+            )
+        except SyntaxError as exc:
+            raise CodeValidationError(
+                format_syntax_error_msg(exc), orig_exc=exc
+            ) from exc
 
+        function_object = globals_dict[self.function_name]
+
+        def catch_exceptions(func):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                """Wrap and check exceptions to return a longer and clearer exception."""
+
+                try:
+                    return func(*args, **kwargs)
+                except Exception as exc:
+                    err_msg = format_generic_error_msg(exc, code_widget=self)
+                    raise CodeValidationError(err_msg, orig_exc=exc) from exc
+
+            return wrapper
+
+        return catch_exceptions(function_object)

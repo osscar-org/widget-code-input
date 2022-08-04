@@ -1,18 +1,29 @@
 import ast
-#from xml.sax.saxutils import escape
+import sys
+import traceback
+
+
+class CodeValidationError(Exception):
+    """Class raised when there is an exception within a WidgetCodeInput."""
+
+    def __init__(self, msg, orig_exc):
+        super().__init__(msg)
+        self.orig_exc = orig_exc
+
 
 def is_valid_variable_name(name):
     """
-    Check if the value specified is a valid variable name (e.g. to 
+    Check if the value specified is a valid variable name (e.g. to
     validate the function name)
 
     :return: True if the name is valid, False otherwise
     """
     try:
-        ast.parse('{} = None'.format(name))
+        ast.parse("{} = None".format(name))
         return True
     except (SyntaxError, ValueError, TypeError):
         return False
+
 
 def prepend_indent(string, indent_level):
     """
@@ -21,9 +32,12 @@ def prepend_indent(string, indent_level):
     :string: string to which we want to append the indent
     :indent_level: integer number of spaces to prepend
     """
-    indented = "".join("{}{}\n".format(" "*indent_level, line) for line in string.splitlines())
+    indented = "".join(
+        "{}{}\n".format(" " * indent_level, line) for line in string.splitlines()
+    )
     return indented
-    
+
+
 def build_pre_body(signature, docstring, indent_level=4):
     """
     Prepare the part of the function before the function body
@@ -35,12 +49,13 @@ def build_pre_body(signature, docstring, indent_level=4):
     """
     if '"""' in docstring:
         raise ValueError('Triple double quotes (""") not allowed in docstring')
-    
+
     return "{}\n{}".format(
-        signature, 
+        signature,
         prepend_indent('"""{}"""'.format(docstring), indent_level=indent_level),
     )
-    
+
+
 def build_function(signature, docstring, body, indent_level=4):
     """
     Return the full function content
@@ -54,8 +69,9 @@ def build_function(signature, docstring, body, indent_level=4):
     # adds already a \n at the end of each line
     return "{}{}".format(
         build_pre_body(signature, docstring, indent_level=indent_level),
-        prepend_indent(body, indent_level=indent_level)
+        prepend_indent(body, indent_level=indent_level),
     )
+
 
 def build_signature(function_name, function_parameters):
     """
@@ -67,38 +83,45 @@ def build_signature(function_name, function_parameters):
     """
     return "def {}({}):".format(function_name, function_parameters)
 
-# def build_function_signature(function_name, args, defaults=None, varargs=None, keywords=None):
-#     """
-#     For the following function:
-    
-#     def fn(a, b, c=1, d="a", *args):
-#         pass
-        
-#     we have:
-    
-#     - function_name = "fn"
-#     - args = ['a', 'b', 'c', 'd']
-#     - defaults = [1, 'a']
-#     - varargs = 'args'
-#     - keywords = None
-    
-#     For now, defaults are not implemented (they require e.g. to convert a string to its python representation with quotes)
-#     """
-#     assert is_valid_variable_name(function_name)
-#     for arg in args:
-#         assert is_valid_variable_name(function_name)
-#     if varargs is not None:
-#         assert is_valid_variable_name(varargs)
-#     if keywords is not None:
-#         assert is_valid_variable_name(keywords)        
 
-#     mangled_args = [arg for arg in args] # here one could put the logic for defaults as well
-#     if varargs is not None:
-#         mangled_args.append('*{}'.format(varargs))
-#     if keywords is not None:
-#         mangled_args.append('*{}'.format(keywords))        
-    
-#     args_string = ", ".join(args)
-        
-#     signature="def {}({}):".format(function_name, args_string)
-#     return signature
+def format_syntax_error_msg(exc):
+    """
+    Return a string reproducing the output of a SyntaxError.
+
+    :param exc: The exception that is being processed.
+    """
+    se_args = exc.args[1]
+    return f"""SyntaxError in code input: {exc.args[0]}
+File "{se_args[0]}", line {se_args[1]}
+{se_args[3]}{' ' * max(0, se_args[2] - 1)}^
+"""
+
+
+def format_generic_error_msg(exc, code_widget):
+    """
+    Return a string reproducing the traceback of a typical error.
+    This includes line numbers, as well as neighboring lines.
+
+    It will require also the code_widget instance, to get the actual source code.
+
+    :note: this must be called from withou the exception, as it will get the current traceback state.
+
+    :param exc: The exception that is being processed.
+    :param code_widget: the instance of the code widget with the code that raised the exception.
+    """
+    error_class, _, tb = sys.exc_info()
+    line_number = traceback.extract_tb(tb)[-1][1]
+    code_lines = code_widget.full_function_code.splitlines()
+
+    err_msg = f"{error_class.__name__} in code input: {str(exc)}\n"
+    if line_number > 2:
+        err_msg += f"     {line_number - 2:4d} {code_lines[line_number - 3]}\n"
+    if line_number > 1:
+        err_msg += f"     {line_number - 1:4d} {code_lines[line_number - 2]}\n"
+    err_msg += f"---> {line_number:4d} {code_lines[line_number - 1]}\n"
+    if line_number < len(code_lines):
+        err_msg += f"     {line_number + 1:4d} {code_lines[line_number]}\n"
+    if line_number < len(code_lines) - 1:
+        err_msg += f"     {line_number + 2:4d} {code_lines[line_number + 1]}\n"
+
+    return err_msg
