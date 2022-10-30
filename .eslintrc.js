@@ -21,6 +21,10 @@ module.exports = {
       'single',
       { avoidEscape: true, allowTemplateLiterals: false }
     ],
+    '@typescript-eslint/no-this-alias': [
+      'error',
+      { "allowDestructuring": true, "allowedNames": ["_this"] }
+    ],
     curly: ['error', 'all'],
     eqeqeq: 'error',
     'prefer-arrow-callback': 'error'
