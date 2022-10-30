@@ -9,4 +9,4 @@ Information about the frontend package of the widgets.
 """
 
 module_name = "widget-code-input"
-module_version = "^3.0.0"
+module_version = "^3.5.0"
