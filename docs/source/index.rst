@@ -4,7 +4,7 @@ widget_code_input
 
 Version: |release|
 
-A Jupyter widget to allow input of a python function, with syntax highlighting.
+A widget to allow input of a python function, with syntax highlighting.
 
 
 Quickstart
