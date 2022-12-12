@@ -1,4 +1,4 @@
-// Copyright (c) Dou Du
+// Copyright (c) Dou Du and Giovanni Pizzi
 // Distributed under the terms of the Modified BSD License.
 
 import { Application, IPlugin } from '@lumino/application';
@@ -11,7 +11,7 @@ import * as widgetExports from './widget';
 
 import { MODULE_NAME, MODULE_VERSION } from './version';
 
-const EXTENSION_ID = 'widget-code-input:plugin';
+const EXTENSION_ID = 'widget_code_input:plugin';
 
 /**
  * The example plugin.

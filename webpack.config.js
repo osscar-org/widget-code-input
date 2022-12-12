@@ -40,7 +40,7 @@ module.exports = [
   },
 
   /**
-   * Embeddable widget-code-input bundle
+   * Embeddable widget_code_input bundle
    *
    * This bundle is almost identical to the notebook extension bundle. The only
    * difference is in the configuration of the webpack public path for the
@@ -55,8 +55,8 @@ module.exports = [
         filename: 'index.js',
         path: path.resolve(__dirname, 'dist'),
         libraryTarget: 'amd',
-        library: "widget-code-input",
-        publicPath: 'https://unpkg.com/widget-code-input@' + version + '/dist/'
+        library: "widget_code_input",
+        publicPath: 'https://unpkg.com/widget_code_input@' + version + '/dist/'
     },
     devtool: 'source-map',
     module: {
@@ -77,7 +77,7 @@ module.exports = [
     output: {
       filename: 'embed-bundle.js',
       path: path.resolve(__dirname, 'docs', 'source', '_static'),
-      library: "widget-code-input",
+      library: "widget_code_input",
       libraryTarget: 'amd'
     },
     module: {

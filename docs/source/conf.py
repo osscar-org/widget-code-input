@@ -59,8 +59,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'widget_code_input'
-copyright = '2022, Dou Du'
-author = 'Dou Du'
+copyright = '2022, Dou Du and Giovanni Pizzi'
+author = 'Dou Du and Giovanni Pizzi'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -148,7 +148,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'widget_code_input.tex', 'widget_code_input Documentation',
-     'Dou Du', 'manual'),
+     'Dou Du and Giovanni Pizzi', 'manual'),
 ]
 
 
