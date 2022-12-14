@@ -1,0 +1,25 @@
+# a mybinder.org-ready environment for demoing jupyterlab_cube
+# this environment may also be used locally on Linux/MacOS/Windows, e.g.
+#
+#   conda env update --file binder/environment.yml
+#   conda activate jupyterlab_cube-demo
+#
+name: widget-code-input
+
+channels:
+  - conda-forge
+
+dependencies:
+  # runtime dependencies
+  - python >=3.9.12,<3.10
+  - jupyterlab >=3.5.1,<4.0.0a0
+  # labextension build dependencies
+  - nodejs >=18,<19
+  - yarn >=1.22
+  - pip
+  - wheel
+  # additional packages for demos
+  - pip:
+    - ipywidgets >=8.0.3
+    - voila >=0.4.0
+    - voila-osscar-template
