@@ -67,7 +67,7 @@ export class WidgetCodeView extends DOMWidgetView {
   private myDocstringCodeMirror: any;
   private myBodyCodeMirror: any;
   private theme: string = this.model.get('code_theme');
-
+  
   render() {
     const cssStyles =
       '<style>\
@@ -194,6 +194,7 @@ export class WidgetCodeView extends DOMWidgetView {
       );
       _this.model.on('change:docstring', _this.docstringValueChanged, _this);
       _this.model.on('change:function_body', _this.bodyValueChanged, _this);
+      _this.model.on('change:code_theme', _this.themeChanged, _this);
 
       // For a proper CodeMirror functioning, we use CodeMirror events
       // rather than Backbone.js events.
@@ -202,6 +203,13 @@ export class WidgetCodeView extends DOMWidgetView {
       _this.myBodyCodeMirror.on('change', _this.bodyChange);
     });
   }
+
+  themeChanged() {
+    this.theme = this.model.get('code_theme');
+    this.mySignatureCodeMirror.setOption('theme', this.theme);
+    this.myDocstringCodeMirror.setOption('theme', this.theme);
+    this.myBodyCodeMirror.setOption('theme', this.theme);
+  } 
 
   bodyChange(instance: any, changeObj: any) {
     // On change of the text in the code widget, send back the content
