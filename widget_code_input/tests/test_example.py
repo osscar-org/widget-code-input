@@ -10,5 +10,5 @@ from ..widget_code_input import WidgetCodeInput
 
 
 def test_example_creation_blank():
-    w = WidgetCodeInput()
+    w = WidgetCodeInput("my_function")
     assert w.value == 'Hello World'
