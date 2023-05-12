@@ -44,8 +44,9 @@ export class WidgetCodeModel extends DOMWidgetModel {
     };
   }
 
-  initialize() {
-    DOMWidgetModel.prototype.initialize.apply(this, arguments as any);
+  initialize(...args: any[]) {
+    const [attributes, options] = args;
+    DOMWidgetModel.prototype.initialize.apply(this, [attributes, options]);
     this.attributes['function_body_id'] = _.uniqueId('function_body');
   }
 
@@ -92,10 +93,8 @@ export class WidgetCodeView extends DOMWidgetView {
       theTextareaId +
       '-body"></textarea>';
 
-    const _this = this; // Backbone.js view object
-
     _.defer(() => {
-      _this.mySignatureCodeMirror = CodeMirror.fromTextArea(
+      this.mySignatureCodeMirror = CodeMirror.fromTextArea(
         <HTMLTextAreaElement>(
           document.getElementById(theTextareaId + '-signature')
         ),
@@ -114,18 +113,18 @@ export class WidgetCodeView extends DOMWidgetView {
         }
       );
 
-      _this.mySignatureCodeMirror.setOption('theme', _this.theme);
-      _this.mySignatureCodeMirror.display.wrapper.classList.add(
+      this.mySignatureCodeMirror.setOption('theme', this.theme);
+      this.mySignatureCodeMirror.display.wrapper.classList.add(
         'widget-code-input-signature'
       );
 
-      _this.myDocstringCodeMirror = CodeMirror.fromTextArea(
+      this.myDocstringCodeMirror = CodeMirror.fromTextArea(
         <HTMLTextAreaElement>(
           document.getElementById(theTextareaId + '-docstring')
         ),
         {
           lineNumbers: true,
-          //firstLineNumber: // This will be set later by changing the content, that
+          //firstLineNumber: // This will be set later by changing the content, this
           // indirectly calls the function to update the line numbers
           mode: {
             name: 'python',
@@ -140,16 +139,16 @@ export class WidgetCodeView extends DOMWidgetView {
         }
       );
       // Add CSS
-      _this.myDocstringCodeMirror.setOption('theme', _this.theme);
-      _this.myDocstringCodeMirror.display.wrapper.classList.add(
+      this.myDocstringCodeMirror.setOption('theme', this.theme);
+      this.myDocstringCodeMirror.display.wrapper.classList.add(
         'widget-code-input-docstring'
       );
 
-      _this.myBodyCodeMirror = CodeMirror.fromTextArea(
+      this.myBodyCodeMirror = CodeMirror.fromTextArea(
         <HTMLTextAreaElement>document.getElementById(theTextareaId + '-body'),
         {
           lineNumbers: true,
-          //firstLineNumber: // This will be set later by changing the content, that
+          //firstLineNumber: // This will be set later by changing the content, this
           // indirectly calls the function to update the line numbers
           mode: {
             name: 'python',
@@ -165,42 +164,46 @@ export class WidgetCodeView extends DOMWidgetView {
       );
 
       // Add CSS
-      _this.myBodyCodeMirror.setOption('theme', _this.theme);
-      _this.myBodyCodeMirror.display.wrapper.classList.add(
+      this.myBodyCodeMirror.setOption('theme', this.theme);
+      this.myBodyCodeMirror.display.wrapper.classList.add(
         'widget-code-input-body'
       );
       // I need to attach the backboneView, since I'm going to use
       // a CodeMirror event rather than a backboneView, but
       // bodyChange needs to access the Backbone.js View
-      _this.myBodyCodeMirror._backboneView = _this;
+      this.myBodyCodeMirror._backboneView = this;
 
       // Set the initial values of the cells
-      _this.signatureValueChanged();
-      _this.docstringValueChanged();
-      _this.bodyValueChanged();
+      this.signatureValueChanged();
+      this.docstringValueChanged();
+      this.bodyValueChanged();
 
       // When the value is changed in python, update the value in the widget
       // I set this in the 'defer' so that bodyValueChanged is called only
       // when the CodeWidget has been  rendered.
-      _this.model.on(
-        'change:function_name',
-        _this.signatureValueChanged,
-        _this
-      );
-      _this.model.on(
+      this.model.on('change:function_name', this.signatureValueChanged, this);
+      this.model.on(
         'change:function_parameters',
-        _this.signatureValueChanged,
-        _this
+        this.signatureValueChanged,
+        this
       );
-      _this.model.on('change:docstring', _this.docstringValueChanged, _this);
-      _this.model.on('change:function_body', _this.bodyValueChanged, _this);
+      this.model.on('change:docstring', this.docstringValueChanged, this);
+      this.model.on('change:function_body', this.bodyValueChanged, this);
+      this.model.on('change:code_theme', this.themeChanged, this);
 
       // For a proper CodeMirror functioning, we use CodeMirror events
       // rather than Backbone.js events.
       // Only the function_body is not read-only, so we need only this
       // event
-      _this.myBodyCodeMirror.on('change', _this.bodyChange);
+      this.myBodyCodeMirror.on('change', this.bodyChange);
     });
+  }
+
+  themeChanged() {
+    this.theme = this.model.get('code_theme');
+    this.mySignatureCodeMirror.setOption('theme', this.theme);
+    this.myDocstringCodeMirror.setOption('theme', this.theme);
+    this.myBodyCodeMirror.setOption('theme', this.theme);
   }
 
   bodyChange(instance: any, changeObj: any) {

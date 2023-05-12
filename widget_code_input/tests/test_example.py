@@ -6,9 +6,9 @@
 
 import pytest
 
-from ..example import ExampleWidget
+from ..widget_code_input import WidgetCodeInput
 
 
 def test_example_creation_blank():
-    w = ExampleWidget()
-    assert w.value == 'Hello World'
+    w = WidgetCodeInput("my_function")
+    assert w.function_name == 'my_function'
