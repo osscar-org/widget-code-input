@@ -1,6 +1,6 @@
 {
   "name": "widget_code_input",
-  "version": "3.6.0",
+  "version": "3.6.1",
   "description": "A widget to allow input of a python function, with syntax highlighting.",
   "keywords": [
     "jupyter",
