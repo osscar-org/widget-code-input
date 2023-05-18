@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@jupyter-widgets/base": "^1.1.10 || ^2 || ^3 || ^4 || ^5 || ^6",
-    "codemirror": "5.65.9"
+    "codemirror": "5.65.13"
   },
   "devDependencies": {
     "@babel/core": "^7.5.0",
