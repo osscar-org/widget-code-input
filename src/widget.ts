@@ -158,7 +158,7 @@ export class WidgetCodeView extends DOMWidgetView {
           },
           readOnly: false,
           indentUnit: 4,
-          indentWithTabs: true,
+          indentWithTabs: false,
           gutters: ['CodeMirror-linenumbers', 'forced-indent'],
         }
       );
