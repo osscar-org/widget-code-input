@@ -159,9 +159,48 @@ export class WidgetCodeView extends DOMWidgetView {
           readOnly: false,
           indentUnit: 4,
           indentWithTabs: false,
+          smartIndent: true,
           gutters: ['CodeMirror-linenumbers', 'forced-indent'],
         }
       );
+
+      this.myBodyCodeMirror.setOption("extraKeys", {
+        Tab: (cm: any) => {
+          if (cm.getMode().name === 'null') {
+            cm.execCommand('insertTab');
+          } else {
+            if (cm.somethingSelected()) {
+              cm.execCommand('indentMore');
+            } else {
+              cm.execCommand('insertSoftTab');
+            }
+          }
+        },
+        Backspace: (cm: any) => {
+          if (!cm.somethingSelected()) {
+            let cursorsPos = cm.listSelections().map((selection: any) => selection.anchor);
+            let indentUnit = cm.options.indentUnit;
+            let shouldDelChar = false;
+            for (let cursorIndex in cursorsPos) {
+              let cursorPos = cursorsPos[cursorIndex];
+              let indentation = cm.getStateAfter(cursorPos.line).indented;
+              if (!(indentation !== 0 &&
+                cursorPos.ch <= indentation &&
+                cursorPos.ch % indentUnit === 0)) {
+                shouldDelChar = true;
+              }
+            }
+            if (!shouldDelChar) {
+              cm.execCommand('indentLess');
+            } else {
+              cm.execCommand('delCharBefore');
+            }
+          } else {
+            cm.execCommand('delCharBefore');
+          }
+        },
+        'Shift-Tab': (cm: any) => cm.execCommand('indentLess')
+      })
 
       // Add CSS
       this.myBodyCodeMirror.setOption('theme', this.theme);
