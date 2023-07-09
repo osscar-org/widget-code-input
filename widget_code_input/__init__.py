@@ -21,7 +21,7 @@ def _jupyter_labextension_paths():
     """
     return [{
         'src': 'labextension',
-        'dest': 'widget-code-input',
+        'dest': 'widget_code_input',
     }]
 
 
