@@ -110,8 +110,15 @@ def format_generic_error_msg(exc, code_widget):
     :param code_widget: the instance of the code widget with the code that raised the exception.
     """
     error_class, _, tb = sys.exc_info()
-    line_number = traceback.extract_tb(tb)[-1][1]
+
+    frame_summary = traceback.extract_tb(tb)[-1]
     code_lines = code_widget.full_function_code.splitlines()
+
+    if frame_summary.name == "wrapper":
+        # error message is in function signature
+        line_number = 1
+    else:
+        line_number = frame_summary[1]
 
     err_msg = f"{error_class.__name__} in code input: {str(exc)}\n"
     if line_number > 2:
