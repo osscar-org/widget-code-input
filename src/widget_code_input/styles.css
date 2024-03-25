@@ -1,0 +1,5 @@
+.forced-indent {width: 4em;}
+.CodeMirror {border: 1px solid #fff; height: auto;}
+.CodeMirror.widget-code-input-signature {border-bottom: 0px;}
+.CodeMirror.widget-code-input-docstring {border-top: 0px;}
+.CodeMirror.widget-code-input-body {border-top: 0px;}

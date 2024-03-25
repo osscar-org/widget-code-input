@@ -1,0 +1,25 @@
+{
+	"scripts": {
+		"dev": "npm run build -- --sourcemap=inline --watch",
+		"build": "esbuild --bundle --format=esm --outdir=src/widget_code_input/static src/widget_code_input/index.js src/widget_code_input/styles.css"
+	},
+	"devDependencies": {
+		"esbuild": "^0.20.0",
+		"eslint": "^8.57.0",
+		"eslint-config-google": "^0.14.0"
+	},
+  "dependencies": {
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/lang-python": "^6.1.4",
+    "@jupyter-widgets/base": "^6.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@uiw/codemirror-theme-solarized": "^4.21.24",
+    "@uiw/codemirror-themes": "^4.21.24",
+    "cm6-theme-basic-light": "^0.2.0",
+    "cm6-theme-nord": "^0.2.0",
+    "cm6-theme-solarized-light": "^0.2.0",
+    "codemirror": "^6.0.1",
+    "rollup": "^4.12.1",
+    "underscore": "^1.13.6"
+  }
+}
