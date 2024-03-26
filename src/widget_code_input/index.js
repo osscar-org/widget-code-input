@@ -37,9 +37,9 @@ function render(context) {
       '<style>\
             .forced-indent {width: 4em;}\
             .CodeMirror {border: 1px solid #aaa; height: auto;}\
-            .CodeMirror.widget-code-input-signature {border-bottom: 0px;}\
-            .CodeMirror.widget-code-input-docstring {border-top: 0px;}\
-            .CodeMirror.widget-code-input-body {border-top: 0px;}\
+            widget-code-input-signature {border-bottom: 0px solid #aaa;}\
+            widget-code-input-docstring {border-top: 0px solid #aaa;}\
+            .widget-code-input-body { border-top: 1px solid #aaa;}\
         </style>';
     
 
@@ -51,13 +51,13 @@ function render(context) {
     textArea.outerHTML =  cssStyles +
       '<textarea id="' +
       theTextareaId +
-      '-signature" class="textwidgetclassname"></textarea>' +
+      '-signature" class="CodeMirror.widget-code-input-signature"></textarea>' +
       '<textarea id="' +
       theTextareaId +
-      '-docstring"></textarea>' +
+      '-docstring" class="CodeMirror.widget-code-input-docstring"></textarea>' +
       '<textarea id="' +
       theTextareaId +
-        '-body"></textarea>';
+        '-body" class="CodeMirror.widget-code-input-body"></textarea>';
 
     
     function editorFromTextArea(textarea, extensions) {
@@ -107,6 +107,8 @@ function render(context) {
                                                          
                                                         );
 
+        mySignatureCodeMirror.dom.classList.add("widget-code-input-signature")
+        
         var myDocstringCodeMirror = editorFromTextArea(document.getElementById(theTextareaId + '-docstring'), [lineNumbers(), EditorState.readOnly.of(true), EditorView.editorAttributes.of({class:"widget-code-input-docstring"}), gutter({class:"forced-indent"}), guttercomp.of(lineNumbers()),
                                                                                                                
       history(),
@@ -129,6 +131,9 @@ function render(context) {
         ...lintKeymap,
       ]), python(), indentUnit.of("    "), theme_compartment_doc.of(basicLight)]);
 
+
+        mySignatureCodeMirror.dom.classList.add("widget-code-input-signature"); // add css for border to docstring element
+        
         // event listener for changes to function body
 
         var bodyUpdateListenerCompartment = new Compartment;
@@ -155,6 +160,7 @@ function render(context) {
         ...lintKeymap,
       ]),python(),indentUnit.of("    "), theme_compartment_body.of(basicLight)]);
 
+        myBodyCodeMirror.dom.classList.add("widget-code-input-body")
 
         let bodyUpdateListenerExtension = EditorView.updateListener.of((update) => {
             if (update.docChanged) {
