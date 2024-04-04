@@ -249,7 +249,7 @@ function  bodyValueChanged() {
 
             var themeMap = {
                 "nord": nord,
-                "solarizedlight": solarizedLight,
+                "solarizedLight": solarizedLight,
                 "basicLight": basicLight
             };
 
@@ -269,6 +269,9 @@ function  bodyValueChanged() {
             myBodyCodeMirror.dispatch({
                 effects: theme_compartment_body.reconfigure(theme)
             })
+
+            mySignatureCodeMirror.dom.classList.add("widget-code-input-signature") // reapply css styling
+            myBodyCodeMirror.dom.classList.add("widget-code-input-body") // after theme update
         }
 
         
