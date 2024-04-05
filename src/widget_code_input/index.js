@@ -12,26 +12,25 @@ import * as _ from 'underscore';
 import { nord } from 'cm6-theme-nord'
 import { solarizedLight } from 'cm6-theme-solarized-light'
 import { basicLight } from 'cm6-theme-basic-light'
-// Import the css for the CodeMirror themes
-// import '../css/midnight.css';
-// import '../css/monokai.css';
-// import '../css/eclipse.css';
-// import '../css/material.css';
-// import '../css/solarized.css';
-// import '../css/idea.css';
-// import '../css/nord.css';
 
+export default{
+ initialize({ model }) {
+// 	/* (optional) model initialization logic */
+
+ },
 
 
 /** @param {{ model: DOMWidgetModel, el: HTMLElement }} context */
 
-function render(context) {
-    let el = context.el; // this is the view
-	let model = context.model; // this is widgetmodel
+    render({model,el}) {
 
 
-    model.attributes={function_body_id:'fid'}
+        
+        var unique_funcbody_id =  model.get('widget_instance_count_trait')
+        
 
+        model.attributes={function_body_id:unique_funcbody_id}
+    
     // Note: I think this inadvertanly changes the code cells inside the entire notebook
     const cssStyles =
       '<style>\
@@ -44,7 +43,8 @@ function render(context) {
     
 
 
-    const theTextareaId = model.attributes['function_body_id'];
+        const theTextareaId = model.attributes['function_body_id'];
+        console.log("theTextareaId = %s",theTextareaId);
     let textArea = document.createElement("textArea");
     el.appendChild(textArea)
     
@@ -224,7 +224,6 @@ function  signatureValueChanged() {
                 myDocstringCodeMirror.dispatch({
   changes: {from: 0, to: myDocstringCodeMirror.state.doc.length, insert: newDocstring}
 })
-//      myDocstringCodeMirror.setValue(newDocstring);
     }
    updateLineNumbers();
   }
@@ -299,4 +298,4 @@ function  bodyValueChanged() {
     });
 
 }
-export default { render };
+}

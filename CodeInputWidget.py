@@ -22,12 +22,16 @@ bundler_output_dir = pathlib.Path(os.path.abspath('')) / "src/widget_code_input/
 
 
 class CodeInputWidget(anywidget.AnyWidget):
+        widget_instance_count=0 # counter to keep track of number of widget instances in use
+        
         function_name = Unicode('example').tag(sync=True)
         function_parameters = Unicode('').tag(sync=True)
         docstring = Unicode('\n').tag(sync=True)
         function_body = Unicode('').tag(sync=True)
-        code_theme = Unicode('').tag(sync=True)  
+        code_theme = Unicode('').tag(sync=True)
+        widget_instance_count_trait = Unicode(f'').tag(sync=True)
         
+
         @validate('function_name')
         def _valid_function_name(self, function_name):
             """
@@ -85,20 +89,22 @@ class CodeInputWidget(anywidget.AnyWidget):
             """
 
             super(CodeInputWidget, self).__init__()
-
+            
             self.function_name = function_name
             self.function_parameters = function_parameters
             self.docstring = docstring
             self.function_body = function_body
             self.code_theme = code_theme
+            self.widget_instance_count_trait=f"{CodeInputWidget.widget_instance_count}"
+            CodeInputWidget.widget_instance_count+=1
 
-        # think I should __init__ here and set code_theme etc
+
         _esm = bundler_output_dir / "index.js"
-        #_esm = "./editor.bundle.js"
         _css = bundler_output_dir / "styles.css"
         name = traitlets.Unicode().tag(sync=True)
 
-        count = traitlets.Int(0).tag(sync=True)
+        
+
         
         @property
         def full_function_code(self):
@@ -168,7 +174,3 @@ class CodeInputWidget(anywidget.AnyWidget):
             return catch_exceptions(function_object)
 
 
-w = CodeInputWidget("myFunc")
-
-
-w
