@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 [project]
 name = "widget_code_input"
 version = "4.0.5"
-dependencies = ["anywidget>=0.9.3"]
+dependencies = ["anywidget>=0.9.1"]
 readme = "README.md"
 
 [project.optional-dependencies]

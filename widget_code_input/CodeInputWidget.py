@@ -6,9 +6,9 @@ import anywidget
 import traitlets
 import os
 from traitlets import Unicode, validate, TraitError
-from _frontend import module_name, module_version 
+from .frontend import module_name, module_version 
 
-from utils import (
+from .utils import (
     CodeValidationError,
     build_function,
     build_signature,
@@ -18,7 +18,7 @@ from utils import (
 )
 
 
-bundler_output_dir = pathlib.Path(os.path.abspath('')) / "src/widget_code_input/static"
+bundler_output_dir = pathlib.Path(os.path.abspath('')) / "./src/widget_code_input/static"
 
 
 class CodeInputWidget(anywidget.AnyWidget):
