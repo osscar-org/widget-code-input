@@ -18,7 +18,7 @@ from .utils import (
 )
 
 
-bundler_output_dir = pathlib.Path(os.path.abspath('')) / "./src/widget_code_input/static"
+bundler_output_dir = pathlib.Path(os.path.dirname(os.path.abspath(__file__))) / "./static"
 
 
 class CodeInputWidget(anywidget.AnyWidget):

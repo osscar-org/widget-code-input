@@ -5,9 +5,11 @@ build-backend = "hatchling.build"
     
 [project]
 name = "widget_code_input"
-version = "4.0.5"
+version = "4.0.8"
 dependencies = ["anywidget>=0.9.1"]
 readme = "README.md"
+license = { file = "LICENSE.txt" }
+    
 
 [project.optional-dependencies]
 dev = ["watchfiles", "jupyterlab"]
@@ -17,12 +19,12 @@ dev = ["watchfiles", "jupyterlab"]
 features = ["dev"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/widget_code_input"]
+packages = ["src/widget_code_input","widget_code_input"]
 
 
 [tool.hatch.build]
 only-packages = true
-artifacts = ["src/widget_code_input/static/*"]
+artifacts = ["src/widget_code_input/static/*","widget_code_input/*"]
 
 [tool.hatch.build.hooks.jupyter-builder]
 build-function = "hatch_jupyter_builder.npm_builder"
