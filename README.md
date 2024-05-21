@@ -1,19 +1,12 @@
 
 # widget-code-input
 
+
+[![PyPI version](https://badge.fury.io/py/widget-code-input.svg)](https://badge.fury.io/py/widget-code-input)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/osscar-org/widget-code-input/main?labpath=%2Fexamples%2FWidget_Demo.ipynb)
+
 A widget to allow input of a python function, with syntax highlighting.
 
-## Try it with Binder !
-
-* Simple usage of the widget code input
-
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/osscar-org/widget-code-input/develop?labpath=%2Fexamples%2Fintroduction.ipynb)
-
-* Impact distance of a projectile ( a exmaple for using the widget-code-input for a educational notebook )
-
-- Text for the exercise: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/osscar-org/widget-code-input/develop?urlpath=%2Fvoila%2Frender%2Fdemos%2Fprojectile-notebook.ipynb)
-
-- The interactive exercise: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/osscar-org/widget-code-input/develop?urlpath=%2Fvoila%2Frender%2Fdemos%2Fprojectile-inline.ipynb)
 
 ## Installation
 
@@ -23,23 +16,18 @@ You can install using `pip`:
 pip install widget_code_input
 ```
 
-Or if you use jupyterlab:
+### Releasing and publishing a new version
+
+In order to make a new release of the library and publish to PYPI, run
 
 ```bash
-pip install widget_code_input
-jupyter lab build
+bumpver update --major/--minor/--patch
 ```
 
-If you are using Jupyter Notebook 5.2 or earlier, you may also need to enable
-the nbextension:
-```bash
-jupyter nbextension enable --py [--sys-prefix|--user|--system] widget_code_input
-```
-There are seven different code themes can be chosen. They are "eclipse",
-"idea", "material", "midnight", "monokai", "nord" and "solarized".
-You can check the appearance of the code themes at:
+This will
 
-[https://codemirror.net/demo/theme.html](https://codemirror.net/demo/theme.html)
+- update version numbers, make a corresponding `git commit` and a `git tag`;
+- push this commit and tag to Github, which triggers the Github Action that makes a new Github Release and publishes the package to PYPI.
 
 
 ## Acknowledgements
