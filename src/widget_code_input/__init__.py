@@ -22,6 +22,8 @@ bundler_output_dir = pathlib.Path(os.path.dirname(os.path.abspath(__file__))) / 
 
 
 class CodeInputWidget(anywidget.AnyWidget):
+        _esm = pathlib.Path(__file__).parent / "static" / "widget.js"
+        _css = pathlib.Path(__file__).parent / "static" / "widget.css"
         widget_instance_count=0 # counter to keep track of number of widget instances in use
         
         function_name = Unicode('example').tag(sync=True)
@@ -99,8 +101,7 @@ class CodeInputWidget(anywidget.AnyWidget):
             CodeInputWidget.widget_instance_count+=1
 
 
-        _esm = bundler_output_dir / "index.js"
-        _css = bundler_output_dir / "styles.css"
+
         name = traitlets.Unicode().tag(sync=True)
 
         

@@ -1,14 +1,14 @@
 {
 	"scripts": {
 		"dev": "npm run build -- --sourcemap=inline --watch",
-		"build": "esbuild --bundle --format=esm --outdir=src/widget_code_input/static src/widget_code_input/index.js src/widget_code_input/styles.css"
+		"build": "esbuild js/widget.js --minify --format=esm --bundle  --outdir=src/widget_code_input/static"
 	},
 	"devDependencies": {
 		"esbuild": "^0.20.0",
 		"eslint": "^8.57.0",
 		"eslint-config-google": "^0.14.0"
 	},
-  "dependencies": {
+    "dependencies": {
     "@codemirror/lang-javascript": "^6.2.2",
     "@codemirror/lang-python": "^6.1.4",
     "@jupyter-widgets/base": "^6.0.7",

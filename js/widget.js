@@ -12,7 +12,7 @@ import * as _ from 'underscore';
 import { nord } from 'cm6-theme-nord'
 import { solarizedLight } from 'cm6-theme-solarized-light'
 import { basicLight } from 'cm6-theme-basic-light'
-
+import './widget.css';
 export default{
  initialize({ model }) {
 // 	/* (optional) model initialization logic */

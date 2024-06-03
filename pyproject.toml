@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
     
 [project]
 name = "widget_code_input"
-version = "4.0.10"
+version = "4.0.12"
 dependencies = ["anywidget>=0.9.1"]
 readme = "README.md"
 license = { file = "LICENSE.txt" }
@@ -32,12 +32,12 @@ packages = ["src/widget_code_input","widget_code_input"]
 
 [tool.hatch.build]
 only-packages = true
-artifacts = ["src/widget_code_input/static/*","widget_code_input/*"]
+artifacts = ["src/widget_code_input/static/*"]
 
 [tool.hatch.build.hooks.jupyter-builder]
 build-function = "hatch_jupyter_builder.npm_builder"
-ensured-targets = ["src/widget_code_input/static/index.js"]
-skip-if-exists = ["src/widget_code_input/static/index.js"]
+ensured-targets = ["src/widget_code_input/static/widget.js"]
+skip-if-exists = ["src/widget_code_input/static/widget.js"]
 dependencies = ["hatch-jupyter-builder>=0.5.0"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
