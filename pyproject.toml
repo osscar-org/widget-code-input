@@ -5,10 +5,12 @@ build-backend = "hatchling.build"
     
 [project]
 name = "widget_code_input"
-version = "4.0.12"
+description = 'A jupyter widget which allows users to implement small python functions dynamically and interactively.'
+version = "4.0.11"
 dependencies = ["anywidget>=0.9.1"]
+authors = [{ name = "The OSSCAR team" }]    
 readme = "README.md"
-license = { file = "LICENSE.txt" }
+
 keywords = [
   'jupyter',
   'jupyterlab',
@@ -19,6 +21,23 @@ keywords = [
   'code_editor'
 ]    
 
+classifiers = [
+  'Development Status :: 5 - Production/Stable',
+  'Framework :: Jupyter',
+  'Framework :: Jupyter :: JupyterLab',
+  'Programming Language :: Python',
+  'Programming Language :: Python :: 3.9',
+  'Programming Language :: Python :: 3.10',
+  'Programming Language :: Python :: 3.11',
+  'Topic :: Scientific/Engineering',
+]
+license = { file = 'LICENSE.txt' }
+requires-python = '>=3.9'
+
+[project.urls]
+Home = 'https://www.osscar.org/'
+Source = 'https://github.com/osscar-org/widget-code-input/'
+    
 [project.optional-dependencies]
 dev = ["watchfiles", "jupyterlab","bumpver>=2023"]
 
