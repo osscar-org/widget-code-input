@@ -4,6 +4,8 @@
 
 [![PyPI version](https://badge.fury.io/py/widget-code-input.svg)](https://badge.fury.io/py/widget-code-input)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/osscar-org/widget-code-input/main?labpath=%2Fexamples%2FWidget_Demo.ipynb)
+[![widget test](https://github.com/osscar-org/widget-code-input/actions/workflows/widget-test.yml/badge.svg)](https://github.com/osscar-org/widget-code-input/actions/workflows/widget-test.yml)
+[![screenshot comparison](https://github.com/osscar-org/widget-code-input/actions/workflows/screenshot-comparison.yml/badge.svg)](https://github.com/osscar-org/widget-code-input/actions/workflows/screenshot-comparison.yml)
 
 A widget to allow input of a python function, with syntax highlighting.
 
