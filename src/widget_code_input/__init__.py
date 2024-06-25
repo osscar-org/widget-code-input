@@ -18,7 +18,7 @@ from .utils import (
 )
 
 
-bundler_output_dir = pathlib.Path(os.path.dirname(os.path.abspath(__file__))) / "./static"
+
 
 
 class CodeInputWidget(anywidget.AnyWidget):
@@ -75,7 +75,7 @@ class CodeInputWidget(anywidget.AnyWidget):
         function_parameters="",
         docstring="\n",
         function_body="",
-        code_theme="",
+        code_theme="basicLight",
     ):
             """
             Creates a new widget to show a box to enter code.
