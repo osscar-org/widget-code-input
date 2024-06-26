@@ -18,10 +18,10 @@ from .utils import (
 )
 
 
+bundler_output_dir = pathlib.Path(os.path.dirname(os.path.abspath(__file__))) / "./static"
 
 
-
-class CodeInputWidget(anywidget.AnyWidget):
+class WidgetCodeInput(anywidget.AnyWidget):
         _esm = pathlib.Path(__file__).parent / "static" / "widget.js"
         _css = pathlib.Path(__file__).parent / "static" / "widget.css"
         widget_instance_count=0 # counter to keep track of number of widget instances in use
@@ -90,15 +90,15 @@ class CodeInputWidget(anywidget.AnyWidget):
             :param code_theme: the code theme of the code input box.
             """
 
-            super(CodeInputWidget, self).__init__()
+            super(WidgetCodeInput, self).__init__()
             
             self.function_name = function_name
             self.function_parameters = function_parameters
             self.docstring = docstring
             self.function_body = function_body
             self.code_theme = code_theme
-            self.widget_instance_count_trait=f"{CodeInputWidget.widget_instance_count}"
-            CodeInputWidget.widget_instance_count+=1
+            self.widget_instance_count_trait=f"{WidgetCodeInput.widget_instance_count}"
+            WidgetCodeInput.widget_instance_count+=1
 
 
 
