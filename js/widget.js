@@ -13,20 +13,27 @@ import { nord } from 'cm6-theme-nord'
 import { solarizedLight } from 'cm6-theme-solarized-light'
 import { basicLight } from 'cm6-theme-basic-light'
 import './widget.css';
+
+function generateRandomString(length) {
+    let result = "";
+    while (result.length < length) {
+      result += Math.random().toString(36).substring(2);
+    }
+    return result.substring(0, length);
+  }
+
+
 export default{
  initialize({ model }) {
 // 	/* (optional) model initialization logic */
 
  },
 
-
 /** @param {{ model: DOMWidgetModel, el: HTMLElement }} context */
 
     render({model,el}) {
 
-
-        
-        var unique_funcbody_id =  model.get('widget_instance_count_trait')
+        var unique_funcbody_id = generateRandomString(6)
         
 
         model.attributes={function_body_id:unique_funcbody_id}
