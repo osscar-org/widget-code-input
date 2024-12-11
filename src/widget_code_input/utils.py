@@ -47,12 +47,11 @@ def build_pre_body(signature, docstring, indent_level=4):
     :param docstring: the (unindented) docstring
     :param indent_level: integer number of spaces to prepend to the docstring
     """
-    if '"""' in docstring:
-        raise ValueError('Triple double quotes (""") not allowed in docstring')
 
     return "{}\n{}".format(
         signature,
-        prepend_indent('"""{}"""'.format(docstring), indent_level=indent_level),
+        prepend_indent('' if docstring is None else '"""{}"""'.format(docstring),
+                       indent_level=indent_level),
     )
 
 
