@@ -50,7 +50,7 @@ def build_pre_body(signature, docstring, indent_level=4):
 
     return "{}\n{}".format(
         signature,
-        prepend_indent('' if docstring is None else '"""{}"""'.format(docstring),
+        prepend_indent('' if docstring is None else docstring,
                        indent_level=indent_level),
     )
 
