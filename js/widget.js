@@ -205,18 +205,19 @@ function  signatureValueChanged() {
 
  function updateLineNumbers() {
      const linesSignature = mySignatureCodeMirror.state.doc.toString().split('\n').length;
-     const linesDocstring = myDocstringCodeMirror.state.doc.toString().split('\n').length;
 
+     const docstring = myDocstringCodeMirror.state.doc.toString();
+     const linesDocstring = docstring == "" ? 0 : docstring.split('\n').length;
 
      // increment line numbers in docstring text area by the number of lines in the signature
      myDocstringCodeMirror.dispatch({
- effects: guttercomp.reconfigure(
-     lineNumbers({ formatNumber: n=>linesSignature+n }))
+       effects: guttercomp.reconfigure(
+         lineNumbers({ formatNumber: n=> linesDocstring == 0 ? "" : linesSignature+n }))
      });
 
      myBodyCodeMirror.dispatch({
- effects: guttercomp.reconfigure(
-     lineNumbers({ formatNumber: n=>linesSignature+linesDocstring+n}))
+       effects: guttercomp.reconfigure(
+         lineNumbers({ formatNumber: n=>linesSignature+linesDocstring+n}))
      });
 
  }
@@ -225,7 +226,7 @@ function  signatureValueChanged() {
             // Set the value from python into the CodeMirror widget in the
             // frontend.
 
-            const newDocstring = '"""' + model.get('docstring') + '"""';
+            const newDocstring = model.get('docstring');
 
             if (newDocstring !== myDocstringCodeMirror.state.doc.toString()) {
                 myDocstringCodeMirror.dispatch({
