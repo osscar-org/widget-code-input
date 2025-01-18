@@ -5,7 +5,7 @@ import pathlib
 import anywidget
 import traitlets
 import os
-from traitlets import Unicode, validate, TraitError
+from traitlets import Unicode, validate, TraitError, Any, observe
 from .frontend import module_name, module_version 
 
 from .utils import (
@@ -28,7 +28,10 @@ class WidgetCodeInput(anywidget.AnyWidget):
         
         function_name = Unicode('example').tag(sync=True)
         function_parameters = Unicode('').tag(sync=True)
-        docstring = Unicode('\n').tag(sync=True)
+        docstring = Any(default_value=None, allow_none=True).tag(sync=True)
+        
+
+#        docstring = Unicode('\n').tag(sync=True)
         function_body = Unicode('').tag(sync=True)
         code_theme = Unicode('').tag(sync=True)
         widget_instance_count_trait = Unicode(f'').tag(sync=True)
@@ -62,8 +65,6 @@ class WidgetCodeInput(anywidget.AnyWidget):
             """
             Validate that the docstring do not contain triple double quotes
             """
-            if '"""' in docstring['value']:
-                raise TraitError('The docstring cannot contain triple double quotes (""")')
             return docstring['value']
 
 
@@ -73,7 +74,7 @@ class WidgetCodeInput(anywidget.AnyWidget):
         self,
         function_name,
         function_parameters="",
-        docstring="\n",
+        docstring=None,
         function_body="",
         code_theme="basicLight",
     ):
@@ -94,7 +95,18 @@ class WidgetCodeInput(anywidget.AnyWidget):
             
             self.function_name = function_name
             self.function_parameters = function_parameters
-            self.docstring = docstring
+            if docstring is None:
+                # we cannot store docstring as None so we use
+                # a variable to signify that it was None
+                self.docstring = ""
+                self._display_docstring = False
+            elif docstring.startswith("\"") and docstring.endswith("\""):
+                # assume the quotation marks have been added so we do not need to add them
+                self.docstring = docstring
+                self._display_docstring = True
+            else: 
+                self.docstring = f"\"\"\"{docstring}\"\"\""
+                self._display_docstring = True
             self.function_body = function_body
             self.code_theme = code_theme
             self.widget_instance_count_trait=f"{WidgetCodeInput.widget_instance_count}"
@@ -104,7 +116,15 @@ class WidgetCodeInput(anywidget.AnyWidget):
 
         name = traitlets.Unicode().tag(sync=True)
 
-        
+
+        @observe("docstring")
+        def _on_docstring_changed(self, change):
+                if change["new"] is None:
+                        # Use set_trait to avoid infinite recursion
+                        self.set_trait("docstring", "")
+                        self._display_docstring = False
+                else:
+                        self._display_docstring = True        
 
         
         @property
@@ -114,7 +134,7 @@ class WidgetCodeInput(anywidget.AnyWidget):
             including signature, docstring and body
             """
             return build_function(
-                self.function_signature, self.docstring, self.function_body
+                self.function_signature, self.docstring if self._display_docstring else None, self.function_body
             )
 
         @property
