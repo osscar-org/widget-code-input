@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 [project]
 name = "widget_code_input"
 description = 'A jupyter widget which allows users to implement small python functions dynamically and interactively.'
-version = "4.0.15"
+version = "4.0.16"
 dependencies = ["anywidget>=0.9.1"]
 authors = [{ name = "The OSSCAR team" }]    
 readme = "README.md"
@@ -65,7 +65,7 @@ build_cmd = "build"
 
 
 [tool.bumpver]
-current_version = "v4.0.15"
+current_version = "v4.0.16"
 version_pattern = "vMAJOR.MINOR.PATCH[PYTAGNUM]"
 commit_message = "Bump version {old_version} -> {new_version}"
 commit = true
