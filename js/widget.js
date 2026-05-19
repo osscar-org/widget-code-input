@@ -22,6 +22,21 @@ function generateRandomString(length) {
     return result.substring(0, length);
   }
 
+// Stop keydown events from bubbling out of the editor's DOM. Without this,
+// when the widget is hosted inside a JupyterLab notebook output area,
+// global keybindings like Shift+L are caught by JupyterLab's command-mode
+// keybindings on the surrounding cell — Lumino calls preventDefault(), which
+// in turn suppresses the subsequent `input` event that CodeMirror 6 relies on
+// to insert characters, so the keystroke silently disappears.
+// stopPropagation() only blocks ancestors; CodeMirror's own handlers on the
+// same element still run, so editor behavior is unchanged.
+const stopKeydownPropagation = EditorView.domEventHandlers({
+    keydown: (event) => {
+        event.stopPropagation();
+        return false;
+    }
+});
+
 
 export default{
  initialize({ model }) {
@@ -133,7 +148,8 @@ export default{
         var myDocstringCodeMirror;
 
         const mySignatureCodeMirror = editorFromTextArea(document.getElementById(theTextareaId + '-signature'), [EditorState.readOnly.of(true),lineNumbers(),indentUnit.of("    ")
-, 
+,
+      stopKeydownPropagation,
       history(),
       drawSelection(),
       dropCursor(),
@@ -165,7 +181,7 @@ export default{
         if (model.get('docstring') !== '') {
 
         myDocstringCodeMirror = editorFromTextArea(document.getElementById(theTextareaId + '-docstring'), [lineNumbers(), EditorState.readOnly.of(true), EditorView.editorAttributes.of({class:"widget-code-input-docstring"}), gutter({class:"forced-indent"}), guttercomp.of(lineNumbers()),
-                                                                                                               
+      stopKeydownPropagation,
       history(),
       drawSelection(),
       dropCursor(),
@@ -204,7 +220,8 @@ export default{
 
 
         
-        var myBodyCodeMirror = editorFromTextArea(document.getElementById(theTextareaId + '-body'), [guttercomp.of(lineNumbers()),gutter({class:"forced-indent"}), bodyUpdateListenerCompartment.of([]),                                                          
+        var myBodyCodeMirror = editorFromTextArea(document.getElementById(theTextareaId + '-body'), [guttercomp.of(lineNumbers()),gutter({class:"forced-indent"}), bodyUpdateListenerCompartment.of([]),
+      stopKeydownPropagation,
       history(),
       drawSelection(),
       dropCursor(),
@@ -363,6 +380,7 @@ function  signatureValueChanged() {
                     EditorState.readOnly.of(true),
                     EditorView.editorAttributes.of({ class: 'widget-code-input-docstring' }),
                     gutter({ class: 'forced-indent' }),guttercomp.of(lineNumbers()),
+                    stopKeydownPropagation,
                     syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
                     python(),
                     indentUnit.of('    '),
