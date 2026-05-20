@@ -104,13 +104,27 @@ def format_generic_error_msg(exc, code_widget):
 
     It will require also the code_widget instance, to get the actual source code.
 
-    :note: this must be called from withou the exception, as it will get the current traceback state.
+    :note: this must be called from without the exception, as it will get the current traceback state.
 
     :param exc: The exception that is being processed.
     :param code_widget: the instance of the code widget with the code that raised the exception.
     """
     error_class, _, tb = sys.exc_info()
-    line_number = traceback.extract_tb(tb)[-1][1]
+    frame_summaries = traceback.extract_tb(tb)
+    # The correct frame summary corresponding to wci not allways at the end
+    # therefore we loop through all of them
+    wci_frame_summary = None
+    for frame_summary in frame_summaries:
+        if frame_summary.filename == "widget_code_input":
+            wci_frame_summary = frame_summary
+    if wci_frame_summary is None:
+        warning.warn(
+                "Could not find traceback frame corresponding to "
+                "widget_code_input, we output whole error message."
+        )
+
+        return exc
+    line_number = wci_frame_summary[1]
     code_lines = code_widget.full_function_code.splitlines()
 
     err_msg = f"{error_class.__name__} in code input: {str(exc)}\n"
